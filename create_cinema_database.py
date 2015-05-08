@@ -43,4 +43,32 @@ class CreateCinemaDatabase:
         self.database.commit()
 
     def get_all_movies(self):
-        pass
+        return self.cursor.execute("""SELECT movie_id, movie_name, movie_rating
+            FROM Movies
+            ORDER BY movie_rating ASC""")
+
+    def get_all_projections(self, movie_id):
+        return self.cursor.execute(
+            """SELECT P.projection_id,
+                        P.projection_type,
+                        P.projection_date,
+                        P.projection_time,
+                        M.movie_name
+            FROM Projections AS P
+            INNER JOIN Movies AS M
+            ON P.projection_movie_id = M.movie_id
+            WHERE M.movie_id = ?""", (movie_id,))
+
+    def get_hired_spots(self, proj_id):
+        hired_seats = []
+        info = self.cursor.execute("""SELECT R.reservation_row, R.reservation_col
+            FROM Reservations AS R
+            INNER JOIN Projections AS P
+            ON R.reservation_projection_id = P.projection_id
+            WHERE P.projection_id = ?""", (proj_id,))
+
+        for i in info:
+            seat = (int(i["reservation_row"]), int(i["reservation_col"]))
+            hired_seats.append(seat)
+
+        return hired_seats
