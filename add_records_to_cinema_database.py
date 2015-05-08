@@ -11,12 +11,12 @@ class AddRecordsToCinemaDatabase:
 
     @staticmethod
     def add_projections(db):
-        db.add.projection(1, "3D", "", "")
-        db.add.projection(1, "2D", "", "")
-        db.add.projection(1, "4DX", "", "")
-        db.add.projection(3, "2D", "", "")
-        db.add.projection(2, "3D", "", "")
-        db.add.projection(2, "2D", "", "")
+        db.add_projection(1, "3D", "", "")
+        db.add_projection(1, "2D", "", "")
+        db.add_projection(1, "4DX", "", "")
+        db.add_projection(3, "2D", "", "")
+        db.add_projection(2, "3D", "", "")
+        db.add_projection(2, "2D", "", "")
 
     @staticmethod
     def add_reservations(db):

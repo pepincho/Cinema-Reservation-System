@@ -1,0 +1,14 @@
+from create_cinema_database import CreateCinemaDatabase
+from add_records_to_cinema_database import AddRecordsToCinemaDatabase
+
+
+def main():
+    db = CreateCinemaDatabase()
+
+    AddRecordsToCinemaDatabase.add_movies(db)
+    AddRecordsToCinemaDatabase.add_projections(db)
+    AddRecordsToCinemaDatabase.add_reservations(db)
+
+
+if __name__ == '__main__':
+    main()
