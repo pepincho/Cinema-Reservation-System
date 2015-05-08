@@ -40,7 +40,7 @@ class CreateCinemaDatabase:
             reservation_row,
             reservation_col)
             VALUES(?,?,?,?)""", (username, proj_id, row, col))
-        self.database.commit()
+        # self.database.commit()
 
     def get_all_movies(self):
         return self.cursor.execute("""SELECT movie_id, movie_name, movie_rating
@@ -72,3 +72,8 @@ class CreateCinemaDatabase:
             hired_seats.append(seat)
 
         return hired_seats
+
+    def get_movie(self, movie_id):
+        name = self.cursor.execute("""SELECT movie_name FROM Movies
+            WHERE movie_id = ?""", (movie_id,))
+        return name.fetchone()[0]
