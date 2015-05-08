@@ -84,9 +84,8 @@ class CommandInterface:
         self.__cinema.database.commit()
         print ("Thanks.")
 
-    @staticmethod
-    def cancel_reservation():
-        pass
+    def cancel_reservation(self, username, proj_id):
+        self.__cinema.delete_reservation(username, proj_id)
 
     @staticmethod
     def exit():
@@ -143,8 +142,9 @@ class CommandInterface:
         elif command == "finalize":
             self.finalize_reservation(
                 self.username, self.chosen_proj_id, self.chosen_seats)
-        elif command == "cancel reservation":
-            self.cancel_reservation()
+        elif "cancel reservation" in command:
+            opa = command.split(" ")
+            self.cancel_reservation(opa[2], opa[3])
         elif command == "help":
             CommandInterface.help()
         elif command == "exit":

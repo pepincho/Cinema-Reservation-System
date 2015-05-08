@@ -77,3 +77,9 @@ class CreateCinemaDatabase:
         name = self.cursor.execute("""SELECT movie_name FROM Movies
             WHERE movie_id = ?""", (movie_id,))
         return name.fetchone()[0]
+
+    def delete_reservation(self, username, proj_id):
+        self.cursor.execute("""DELETE FROM Reservations
+            WHERE reservation_username = ?
+            AND reservation_projection_id = ?""", (username, proj_id))
+        self.database.commit()
