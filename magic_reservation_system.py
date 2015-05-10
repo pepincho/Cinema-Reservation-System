@@ -1,4 +1,4 @@
-# from create_cinema_database import CreateCinemaDatabase
+from create_cinema_database import CreateCinemaDatabase
 import sys
 
 
@@ -16,7 +16,6 @@ class CommandInterface:
                                         movie["movie_rating"]))
 
     def show_movie_projections(self, movie_id):
-
         movie_name = self.__cinema.get_movie(movie_id)
         print ("Projection for movie {}".format(movie_name))
 
@@ -28,13 +27,22 @@ class CommandInterface:
                                                 projection["projection_date"],
                                                 projection["projection_time"]))
 
-    # @staticmethod
-    # def show_movie_projections(db, movie_id, date):
-    #     pass
+    def show_movie_projections_date(self, movie_id, date):
+        movie_name = self.__cinema.get_movie(movie_id)
+        print ("Projection for movie {}".format(movie_name))
+
+        projections = self.__cinema.get_all_projections_date(movie_id, date)
+
+        for projection in projections:
+            print ("{} - {} - {}  ".format(projection["projection_id"],
+                                           projection["projection_type"],
+                                           projection["projection_time"]))
+
+        projections = self.__cinema.get_all_projections_date(movie_id, date)
 
     def make_reservation(self):
         self.username = input("Enter your name: ")
-        self.counter_tickets = int(input("Chooce number of tickets: "))
+        counter_tickets = int(input("Chooce number of tickets: "))
 
         self.show_movies()
 
@@ -55,7 +63,7 @@ class CommandInterface:
 
         self.chosen_seats = []
 
-        while counter <= self.counter_tickets:
+        while counter <= counter_tickets:
             str_seats = input("Choose seat {}: ".format(counter))
             str_seats = str_seats.split(",")
             tuple_seats = tuple([int(i) for i in str_seats])
@@ -65,17 +73,20 @@ class CommandInterface:
             elif tuple_seats[0] >= 10 or tuple_seats[1] >= 10:
                 print ("Lol...NO!")
             else:
-                print ("OKAY")
-                print (tuple_seats)
+                self.hired_seats.append(tuple_seats)
                 self.chosen_seats.append(tuple_seats)
                 counter += 1
 
         movie_name = self.__cinema.get_movie(self.chosen_movie_id)
+        date_time_proj = self.__cinema.get_date_time_projection(
+            self.chosen_proj_id)
 
         print ("This is your reservation:")
         print ("Movie: {}".format(movie_name))
-        print ("Date and Time: ")
+        print ("Date and Time: {} {}".format(date_time_proj["projection_date"],
+                                             date_time_proj["projection_time"]))
         print ("Seats: {}".format(self.chosen_seats))
+        print ("Now you should finalize or cancel your reservation.")
 
     def finalize_reservation(self, username, proj_id, chosen_seats):
         for i in chosen_seats:
@@ -86,6 +97,8 @@ class CommandInterface:
 
     def cancel_reservation(self, username, proj_id):
         self.__cinema.delete_reservation(username, proj_id)
+        print ("You canceled the reservation with name {} and projection id {}".format(
+            username, proj_id))
 
     @staticmethod
     def exit():
@@ -102,19 +115,19 @@ class CommandInterface:
         print ("exit")
 
     @staticmethod
+    def generate_seats():
+        rows = CreateCinemaDatabase.ROW_SIZE
+        cols = CreateCinemaDatabase.COL_SIZE
+        matrix = [['.' for x in range(0, cols)] for x in range(0, rows)]
+
+        return matrix
+
+    @staticmethod
     def get_available_seats(hired_seats):
-        rows = 10
-        cols = 10
-        available_seats = [[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-                           [".", ".", ".", ".", ".", ".", ".", ".", ".", "."]]
+        rows = CreateCinemaDatabase.ROW_SIZE
+        cols = CreateCinemaDatabase.COL_SIZE
+        available_seats = CommandInterface.generate_seats()
+
         for i in range(0, rows):
             for j in range(0, cols):
                 if (i, j) in hired_seats:
@@ -130,21 +143,23 @@ class CommandInterface:
             self.__command_dispatcher(command)
 
     def __command_dispatcher(self, command):
-        # elif command == "show movie projections":
-
         if command == "show movies":
             self.show_movies()
         elif "show movie projections" in command:
-            bam = command.split(" ")
-            self.show_movie_projections(bam[3])
+            splitted_command = command.split(" ")
+            if len(splitted_command) > 3:
+                self.show_movie_projections_date(
+                    splitted_command[3], splitted_command[4])
+            else:
+                self.show_movie_projections(splitted_command[3])
         elif command in "make reservation":
             self.make_reservation()
         elif command == "finalize":
             self.finalize_reservation(
                 self.username, self.chosen_proj_id, self.chosen_seats)
         elif "cancel reservation" in command:
-            opa = command.split(" ")
-            self.cancel_reservation(opa[2], opa[3])
+            splitted_command = command.split(" ")
+            self.cancel_reservation(splitted_command[2], splitted_command[3])
         elif command == "help":
             CommandInterface.help()
         elif command == "exit":

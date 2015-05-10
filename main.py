@@ -12,19 +12,9 @@ def main():
     AddRecordsToCinemaDatabase.add_projections(db)
     AddRecordsToCinemaDatabase.add_reservations(db)
 
-    # CommandInterface.show_movies(db)
-    # print (20 * "<>")
-    # CommandInterface.show_movie_projections(db, 2)
-    # print (20 * "<>")
-    # CommandInterface.make_reservation(db)
-
-    print (20 * "<>")
+    print (30 * "<>")
 
     interface.start()
-
-    # while True:
-    #     user_input = input("command: ")
-    #     CommandInterface.identify_command(db, user_input)
 
 
 if __name__ == '__main__':

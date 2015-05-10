@@ -8,6 +8,9 @@ from settings import DB_NAME, SQL_FILE
 
 class CreateCinemaDatabase:
 
+    ROW_SIZE = 10
+    COL_SIZE = 10
+
     def __init__(self):
         self.database = sqlite3.connect(DB_NAME)
         self.database.row_factory = sqlite3.Row
@@ -59,6 +62,19 @@ class CreateCinemaDatabase:
             ON P.projection_movie_id = M.movie_id
             WHERE M.movie_id = ?""", (movie_id,))
 
+    def get_all_projections_date(self, movie_id, datee):
+        return self.cursor.execute(
+            """SELECT P.projection_id,
+                        P.projection_type,
+                        P.projection_date,
+                        P.projection_time,
+                        M.movie_name
+            FROM Projections AS P
+            INNER JOIN Movies AS M
+            ON P.projection_movie_id = M.movie_id
+            WHERE M.movie_id = ?
+            AND P.projection_date = ?""", (movie_id, datee))
+
     def get_hired_spots(self, proj_id):
         hired_seats = []
         info = self.cursor.execute("""SELECT R.reservation_row, R.reservation_col
@@ -83,3 +99,12 @@ class CreateCinemaDatabase:
             WHERE reservation_username = ?
             AND reservation_projection_id = ?""", (username, proj_id))
         self.database.commit()
+
+    def get_date_time_projection(self, proj_id):
+        proj_date_time = self.cursor.execute("""SELECT projection_date, projection_time
+                                    FROM Projections
+                                    WHERE projection_id = ?""", (proj_id,))
+        return proj_date_time.fetchone()
+
+    def get_projection(self, proj_id):
+        pass
