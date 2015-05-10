@@ -17,6 +17,9 @@ class CommandInterface:
 
     def show_movie_projections(self, movie_id):
         movie_name = self.__cinema.get_movie(movie_id)
+        if movie_name == -1:
+            print ("Invalid id of movie!")
+            return
         print ("Projection for movie {}".format(movie_name))
 
         projections = self.__cinema.get_all_projections(movie_id)
