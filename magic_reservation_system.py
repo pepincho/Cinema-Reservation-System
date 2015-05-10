@@ -147,7 +147,7 @@ class CommandInterface:
             self.show_movies()
         elif "show movie projections" in command:
             splitted_command = command.split(" ")
-            if len(splitted_command) > 3:
+            if len(splitted_command) >= 5:
                 self.show_movie_projections_date(
                     splitted_command[3], splitted_command[4])
             else:
