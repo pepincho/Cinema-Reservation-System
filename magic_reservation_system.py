@@ -16,10 +16,14 @@ class CommandInterface:
                                         movie["movie_rating"]))
 
     def show_movie_projections(self, movie_id):
-        movie_name = self.__cinema.get_movie(movie_id)
-        if movie_name == -1:
+        try:
+            movie_name = self.__cinema.get_movie(movie_id)
+        except:
             print ("Invalid id of movie!")
             return
+        # if movie_name == -1:
+        #     print ("Invalid id of movie!")
+        #     return
         print ("Projection for movie {}".format(movie_name))
 
         projections = self.__cinema.get_all_projections(movie_id)
@@ -31,10 +35,13 @@ class CommandInterface:
                                                 projection["projection_time"]))
 
     def show_movie_projections_date(self, movie_id, date):
-        movie_name = self.__cinema.get_movie(movie_id)
-        print ("Projection for movie {}".format(movie_name))
+        try:
+            movie_name = self.__cinema.get_movie(movie_id)
+            print ("Projection for movie {}".format(movie_name))
 
-        projections = self.__cinema.get_all_projections_date(movie_id, date)
+            projections = self.__cinema.get_all_projections_date(movie_id, date)
+        except:
+            print ("Invalid id or date of movie!")
 
         for projection in projections:
             print ("{} - {} - {}  ".format(projection["projection_id"],
@@ -63,7 +70,6 @@ class CommandInterface:
             print (" ".join(i))
 
         counter = 1
-
         self.chosen_seats = []
 
         while counter <= counter_tickets:
@@ -141,6 +147,8 @@ class CommandInterface:
         return available_seats
 
     def start(self):
+        CommandInterface.help()
+
         while True:
             command = input("Enter command: ")
             self.__command_dispatcher(command)
@@ -158,11 +166,17 @@ class CommandInterface:
         elif command in "make reservation":
             self.make_reservation()
         elif command == "finalize":
-            self.finalize_reservation(
-                self.username, self.chosen_proj_id, self.chosen_seats)
+            try:
+                self.finalize_reservation(
+                    self.username, self.chosen_proj_id, self.chosen_seats)
+            except:
+                print ("You should have a reservation in order to finalize.")
         elif "cancel reservation" in command:
             splitted_command = command.split(" ")
-            self.cancel_reservation(splitted_command[2], splitted_command[3])
+            try:
+                self.cancel_reservation(splitted_command[2], splitted_command[3])
+            except:
+                print ("Wrong username or projection's id.")
         elif command == "help":
             CommandInterface.help()
         elif command == "exit":

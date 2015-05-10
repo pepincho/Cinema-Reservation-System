@@ -90,12 +90,12 @@ class CreateCinemaDatabase:
         return hired_seats
 
     def get_movie(self, movie_id):
-        try:
-            name = self.cursor.execute("""SELECT movie_name FROM Movies
-                WHERE movie_id = ?""", (movie_id,))
-            return name.fetchone()[0]
-        except:
-            return -1
+        # try:
+        name = self.cursor.execute("""SELECT movie_name FROM Movies
+            WHERE movie_id = ?""", (movie_id,))
+        return name.fetchone()[0]
+        # except:
+        #     return -1
 
     def delete_reservation(self, username, proj_id):
         self.cursor.execute("""DELETE FROM Reservations
@@ -110,4 +110,6 @@ class CreateCinemaDatabase:
         return proj_date_time.fetchone()
 
     def get_projection(self, proj_id):
-        pass
+        projection = self.cursor.execute("""SELECT * FROM Projections
+                                WHERE projection_id = ?""", (proj_id,))
+        return projection.fetchone()

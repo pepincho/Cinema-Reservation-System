@@ -8,6 +8,7 @@ class AddRecordsToCinemaDatabase:
         db.add_movie("The Hunger Games: Catching Fire", 7.9)
         db.add_movie("Wreck-It Ralph", 7.8)
         db.add_movie("Her", 8.3)
+        db.add_movie("Spiderman", 9)
 
     @staticmethod
     def add_projections(db):
@@ -17,6 +18,12 @@ class AddRecordsToCinemaDatabase:
         db.add_projection(3, "2D", "2014-04-05", "20:20")
         db.add_projection(2, "3D", "2014-04-02", "22:00")
         db.add_projection(2, "2D", "2014-04-02", "19:30")
+        db.add_projection(4, "4DX", "2014-09-19", "19:30")
+        db.add_projection(4, "3D", "2014-05-14", "19:30")
+        db.add_projection(4, "3D", "2014-05-14", "22:30")
+        db.add_projection(4, "5D", "2015-05-14", "19:30")
+
+
 
     @staticmethod
     def add_reservations(db):
